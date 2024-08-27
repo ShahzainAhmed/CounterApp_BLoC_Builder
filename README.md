@@ -24,26 +24,60 @@ CounterInitial represents the initial state when the counter starts (e.g., 0).
 
 CounterIncrementState represents the state after the counter has been incremented, holding the updated counter value.
 
-## Simplified Flow:
-### 1) Event Triggers Logic:
+## Simplified Flow
+### 1) Event Triggers Logic
 - The user interacts with the UI (e.g., presses a button).
 - This interaction triggers an event, like CounterIncrementEvent.
 
-### 2) BLoC Processes the Event:
+### 2) BLoC Processes the Event
 - The event is sent to the CounterBloc.
 - The BLoC processes the event by running the associated method (e.g., counterIncrementEvent).
 - The method updates the internal state or value (e.g., increases the counter).
 
-### 3) State is Emitted:
+### 3) State is Emitted
 - After processing, the BLoC emits a new state, like CounterIncrementState, with the updated counter value.
 - The UI listens to this state and updates accordingly (e.g., displays the new counter value).
 
-There are 2 ways how we change the UI, either we rebuild the complete UI, or either we just show or invoke(calling) a piece of UI, we call a bottomsheet, we call a alert dialog box, scaffoldmessenger, these we invoke(call), and for these components, we use listener, here we are not rebuilding the UI, the app is going to remain as it is, on top of our UI/app, so if i am calling a bottomsheet, it is going to come on top of this page, your UI is not going to change, same goes for alert dialog box, it will come over a piece of UI, the whole page is not going to get rerendered or rebuilding the whole widget or app, for these all we need listener, in listener we dont rebuild things. 
+## Code File Structure
 
-for building:
-see the plus icon button on homescreen, if i press it, it is going to increment the counter, this means it is rebuilding, from 1 to 2, 2 to 3, and goes on as I press the button, it doesn't mean that it is changing on top of my UI, no, the widget itself is changing/rebuilding, the value of the textwidget is changing, that means text widget is rebuilding/rerendering, here we need a BLoCBuilder
+- ### BLoC File (counter_bloc.dart):
 
-BlocConsumer (for both listening and building):
+  - Contains the CounterBloc class where the main logic resides.
+  - Handles events and emits states.
 
-BlocListener: is used whenever we have to invoke or call a function, we dont rebuild anything, so no need to use BlocBuilder, navigations are also part of BlocListener
+- ### Event File (counter_event.dart or part of counter_bloc.dart):
 
+  - Contains all events (CounterEvent and its subclasses).
+  - Events define what actions can be performed on the data managed by the BLoC.
+
+- ### State File (counter_state.dart or part of counter_bloc.dart):
+
+  - Contains all states (CounterState and its subclasses).
+  - States define the different possible conditions that the UI can be in, based on the data processed by the BLoC.
+
+## Summary
+
+- **Event** = What happens (e.g., button press).
+- **BLoC** = Where the logic lives (e.g., incrementing the counter).
+- **State** = What the UI should show (e.g., updated counter value).
+
+By keeping these distinctions in mind, you'll know what to write in each file: define the actions in the event file, handle those actions in the BLoC file, and define the possible UI conditions in the state file.
+
+
+## BlocBuilder
+
+- **Purpose:** Used when the UI needs to rebuild based on state changes.
+
+- **Example:** Updating a counter value in a text widget when a button is pressed.
+
+## BlocListener
+
+- **Purpose:** Used to perform actions without rebuilding the UI, such as showing a dialog, bottom sheet, or triggering navigation.
+
+- **Example:** Displaying a snackbar or an alert dialog in response to an event.
+
+## BlocConsumer
+
+- **Purpose:** Combines the functionalities of both BLoCBuilder and BLoCListener. It can both rebuild the UI and trigger actions based on state changes.
+
+- **Example:** Handling navigation and UI updates simultaneously when a state changes.
