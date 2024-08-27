@@ -6,6 +6,20 @@ The BLoC is a class that contains the business logic of your application. It tak
 
 In our case, CounterBloc is responsible for managing the counter's value. When an event is received (like CounterIncrementEvent), it updates the value and emits a new state with the updated value.
 
+```
+class CounterBloc extends Bloc<CounterEvent, CounterState> {
+  CounterBloc() : super(CounterInitial()) {
+    on<CounterIncrementEvent>(counterIncrementEvent);
+  }
+  int value = 0;
+  FutureOr<void> counterIncrementEvent(
+      CounterIncrementEvent event, Emitter<CounterState> emit) {
+    value = value + 1;
+    emit(CounterIncrementState(value: value));
+  }
+}
+```
+
 ## 2) Event
 
 An event represents an action or occurrence in your app that the BLoC should respond to. It can be triggered by user interaction, such as a button press.
@@ -13,6 +27,14 @@ An event represents an action or occurrence in your app that the BLoC should res
 CounterEvent is the base class for all events related to the counter. 
 
 CounterIncrementEvent is a specific event that indicates the counter should be incremented.
+
+```
+part of 'counter_bloc.dart';
+
+sealed class CounterEvent {}
+
+class CounterIncrementEvent extends CounterEvent {}
+```
 
 ## 3) State
 
@@ -23,6 +45,21 @@ CounterState is the base class for all states related to the counter.
 CounterInitial represents the initial state when the counter starts (e.g., 0).
 
 CounterIncrementState represents the state after the counter has been incremented, holding the updated counter value.
+
+```
+part of 'counter_bloc.dart';
+
+sealed class CounterState {}
+
+final class CounterInitial extends CounterState {}
+
+// we will be passing the value from BLoC to our UI
+class CounterIncrementState extends CounterState {
+  final int value;
+
+  CounterIncrementState({required this.value});
+}
+```
 
 ## Simplified Flow
 ### 1) Event Triggers Logic
